@@ -1,0 +1,39 @@
+{% extends 'dLayout.html' %}
+{% block span %}
+<span>Backup</span>
+{% endblock span %}
+{% block content %}
+<div class="container-fluid">
+    <form method="post"> {% csrf_token %}
+        <button class="btn btn-primary btn-lg form-control rounded mt-2" name="Backup">Backup</button>
+        <!-- <div class="input-group mt-2">
+            <input type="text" class="form-control" name="RestoreInput" placeholder="Nombre de la Copia de Seguridad"
+                aria-label="Nombre de la Copia de Seguridad" aria-describedby="button-addon2">
+            <button class="btn btn-primary rounded-end" name="Restore">Restaurar</button>
+        </div> -->
+    </form>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Backup</th>
+            </tr>
+        </thead>
+        <tbody>
+            <td>{{ File|unordered_list }}</td>
+
+        </tbody>
+    </table>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Media Backup</th>
+            </tr>
+        </thead>
+        <tbody>
+            <td>{{ FileMedia|unordered_list }}</td>
+
+        </tbody>
+    </table>
+</div>
+{% endblock content %}

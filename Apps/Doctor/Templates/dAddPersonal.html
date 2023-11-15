@@ -1,0 +1,121 @@
+{% extends 'dLayout.html' %}
+{% block span %}
+<span>{% if object %} Modificar {% else %} Nuevo {% endif %}</span>
+{% endblock span %}
+
+{% block content %}
+<form method="POST">
+    {% csrf_token %}
+    <fieldset>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm">
+                    <div class="form-group">
+                        <label for="{{ form.FirstName.name }}" class="form-label mt-4">Primer Nombre</label>
+                        {{ form.FirstName }}
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="form-group">
+                        <label for="{{ form.SecondName.name }}" class="form-label mt-4">Segundo Nombre</label>
+                        {{ form.SecondName }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm">
+                    <div class="form-group">
+                        <label for="{{ form.FirstSurname.name }}" class="form-label mt-4">Primer Apellido</label>
+                        {{ form.FirstSurname }}
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="form-group">
+                        <label for="{{ form.SecondSurname.name }}" class="form-label mt-4">Segundo Apellido</label>
+                        {{ form.SecondSurname }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.Birthdate.name }}" class="form-label mt-4">Fecha de Nacimiento</label>
+            {{ form.Birthdate }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.Sex.name }}" class="form-label mt-4">Sexo</label>
+            {{ form.Sex }}
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm">
+                    <div class="form-group">
+                        <label for="{{ form.Address.name }}" class="form-label mt-4">Dirección</label>
+                        {{ form.Address }}
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="form-group">
+                        <label for="{{ form.Origin.name }}" class="form-label mt-4">Procedencia</label>
+                        {{ form.Origin }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm">
+                    <div class="form-group">
+                        <label for="{{ form.Phone.name }}" class="form-label mt-4">Celular</label>
+                        {{ form.Phone }}
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="form-group">
+                        <label for="{{ form.Email.name }}" class="form-label mt-4">Correo</label>
+                        {{ form.Email }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.MaritalStatus.name }}" class="form-label mt-4">Estado Civil</label>
+            {{ form.MaritalStatus }}
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="form-group mb-4 mt-4">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-lg btn-primary rounded" type="submit">
+                            {% if object %} Actualizar {% else %} Guardar {% endif %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% if object %}
+            <form method="POST">
+                <div class="col">
+                    <div class="form-group mb-4 mt-4">
+                        <div class="d-grid gap-2">
+                            <button
+                                class="btn btn-lg rounded {% if  object.Status == True %} btn-danger {% else %} btn-success {% endif %}"
+                                name="Status">
+                                {% if object.Status == True %} Dar de Baja {% else %} Dar de Alta {% endif %}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            {% endif %}
+        </div>
+    </fieldset>
+</form>
+{% endblock content %}

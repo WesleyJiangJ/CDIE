@@ -1,0 +1,210 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<center>
+  <h1>Clinica Dental Integral Especializada</h1>
+</center>
+<center>
+  <h1 class="text-muted m-5">Especialidades</h1>
+</center>
+
+<div class="row">
+  <div class="col">
+    <div class="blog"
+      style="background: url(https://www.fuentedelangel.com/wp-content/uploads/2020/01/endodoncia-en-huesca.jpg) no-repeat;">
+      <div class="title-box">
+        <h3> Endodoncia </h3>
+        <hr />
+        <div class="intro">
+          Dra. Daniela Maria Ruiz Sandoval
+        </div>
+      </div>
+      <div class="info">
+        <!-- <img src="https://tiiz.es/wp-content/uploads/2020/08/Endodoncia-todo-lo-que-necesitas-saber.jpg" style="height: 100px;"> -->
+        <br>
+        <span>Consiste en eliminar la parte profunda del diente cuando se encuentra lesionado o infectado. El objetivo
+          de este tratamiento es limpiar el diente por dentro y rellenarlo de un material inerte.</span>
+      </div>
+      <div class="color-overlay"></div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="blog"
+      style="background: url(https://heroesdental.com/wp-content/uploads/2018/07/Smile-Facts-1080x675.jpeg) no-repeat;">
+      <div class="title-box">
+        <h3> Estética Dental </h3>
+        <hr />
+        <div class="intro">
+          Dra. Anayanci López Poveda
+        </div>
+      </div>
+      <div class="info">
+        <br>
+        <span>Consiste en una serie de tratamientos, orientados a cada problema que presentan las bocas no armónicas.
+          Entre ellos encontramos el blanqueamiento dental, destinado a conseguir un color homogéneo del esmalte, así
+          como una tonalidad más blanca.</span>
+      </div>
+      <div class="color-overlay"></div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="blog"
+      style="background: url(https://www.clinicadrcalatayud.com/wp-content/uploads/2018/04/periodoncia.jpg) no-repeat;">
+      <div class="title-box">
+        <h3> Periodoncia </h3>
+        <hr />
+        <div class="intro">
+          Dr. Juan Leiva
+        </div>
+      </div>
+      <div class="info">
+        <br>
+        <span>Trata las enfermedades de las encías y del hueso que sostiene los dientes. Y es que las enfermedades de
+          las encías como la gingivitis y periodontitis son de las causas más comunes de pérdida de dientes, y su
+          control es fundamental.</span>
+      </div>
+      <div class="color-overlay"></div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="blog"
+      style="background: url(https://www.clinicadentalvas.com/wp-content/uploads/2020/06/ortodoncia-invisible-invisalign-barcelona.jpg) no-repeat;">
+      <div class="title-box">
+        <h3> Ortodoncia </h3>
+        <hr />
+        <div class="intro">
+          Dr. Armando Aristas
+        </div>
+      </div>
+      <div class="info">
+        <br>
+        <span>Consiste en la corrección de los dientes y huesos posicionados incorrectamente. Los dientes en mala
+          posición y los que no muerden correctamente ocasionan una tensión extra sobre los músculos de la masticación
+          que puede generar dolores de cabeza, síndrome de ATM y dolores varios en cuello, hombros y espalda.</span>
+      </div>
+      <div class="color-overlay"></div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* @import url(https://fonts.googleapis.com/css?family=Roboto:400,500,700); */
+
+  /*body {
+    padding-bottom: 4em;
+  }*/
+
+  .col {
+    padding-bottom: 50px;
+  }
+
+  .blog {
+    position: relative;
+    width: 22em;
+    height: 30em;
+    /* background: url(https://tiiz.es/wp-content/uploads/2020/08/Endodoncia-todo-lo-que-necesitas-saber.jpg) no-repeat; */
+    box-shadow: 3px 3px 20px rgba(0, 0, 0, 0.5);
+    margin: auto;
+    overflow: hidden;
+  }
+
+  .blog * {
+    position: relative;
+    z-index: 2;
+  }
+
+  .blog:hover .color-overlay {
+    background: rgba(74, 100, 114, 0.8);
+  }
+
+  .blog:hover .info {
+    bottom: -3em;
+    opacity: 1;
+  }
+
+  .blog,
+  .color-overlay {
+    border-radius: 0.7em;
+  }
+
+  .color-overlay {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: absolute;
+    transition: 0.7s;
+    background: rgba(74, 100, 114, 0.3);
+    z-index: 1;
+  }
+
+  .title-box {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    margin-top: 2em;
+  }
+
+  .title-box hr {
+    margin-top: -0.4em;
+    margin-bottom: 1em;
+    width: 5em;
+    height: 0.25em;
+    box-sizing: content-box;
+    border: none;
+    background: #D0BC57;
+  }
+
+  h3 {
+    display: inline-block;
+    font-weight: 500;
+    letter-spacing: 2px;
+    font-size: 1.4em;
+
+    text-align: center;
+  }
+
+  .intro {
+    width: 170px;
+    margin: 0 auto;
+    color: #fff;
+    font-family: 'Droid Serif', serif;
+    font-size: 13px;
+    font-style: italic;
+    line-height: 18px;
+  }
+
+  .info {
+    font-family: 'Droid Serif', serif;
+    font-size: 1.2em;
+    color: #ddd;
+    line-height: 1.1em;
+    padding: 0 2em;
+    position: relative;
+    bottom: -4em;
+    opacity: 0;
+    background: transparent;
+    transition: opacity 0.3s, bottom 0.3s;
+    text-align: center;
+  }
+
+  .icon-holder i {
+
+    color: #D0BC57;
+  }
+
+  .icon-holder span,
+  h3 {
+    color: #aCcff0;
+  }
+
+  space {
+    display: inline-block;
+    width: 0.6em;
+    height: 1em;
+  }
+</style>
+{% endblock %}

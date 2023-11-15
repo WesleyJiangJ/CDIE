@@ -1,0 +1,84 @@
+{% extends 'dLayout.html' %}
+{% block span %}
+<span>Detalle de Presupuesto</span>
+{% endblock span %}
+
+{% block content %}
+{% include 'message.html' %}
+<div class="row">
+    <div class="col">
+        <legend>
+            <legend class="fw-bold">Paciente</legend> {{ Patient.FirstName }} {{ Patient.SecondName }}
+            {{ Patient.FirstSurname }} {{ Patient.SecondSurname }}
+        </legend>
+    </div>
+    <div class="col">
+        <legend class="text-end pt-2"></i>
+            <legend class="fw-bold">Fecha</legend>{{ Date }}
+        </legend>
+    </div>
+    <legend class="pt-2">
+        <legend class="fw-bold">Médico</legend>{{ Doctor.FirstName }} {{ Doctor.SecondName }} {{ Doctor.FirstSurname }}
+        {{ Doctor.SecondSurname }}
+    </legend>
+</div>
+<table id="Table" class="table mt-2">
+    <thead>
+        <tr class="text-center">
+            <th scope="col">Cantidad</th>
+            <th scope="col">Tratamiento</th>
+            <th scope="col">Precio Unitario</th>
+            <th scope="col">Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for budgetField in BudgetFields %}
+        <tr class="text-center">
+            <td scope="row">{{ budgetField.Quantity }}</td>
+            <td>{{ budgetField.Treatment }}</td>
+            <td>C${{ budgetField.Cost }}</td>
+            <td>C${% widthratio budgetField.Quantity 1 budgetField.Cost %}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td class="text-center">C${{ Total }} </td>
+    </tfoot>
+</table>
+
+
+<!-- <p class="lead pt-2">Nota</p>
+<figcaption class="blockquote-footer">
+    Se menciona que pueden existir variaciones durante la realización del tratamiento lo que conlleva a variación en el presupuesto.
+</figcaption> -->
+{% if user.is_authenticated and user.usuario_administrador or user.idDoctor_id or user.idPersonal_id%}
+{% if not PaymentControl %}
+    <div class="row">
+        <div class="col mb-4" title="Editar">
+            <a class="btn btn-lg btn-primary form-control rounded" type="button" href=" {% url 'BudgetFieldsUpdateView' BudgetID %} ">
+                <i class='bx bx-edit-alt bx-sm align-middle'></i>
+            </a>
+        </div>
+
+        <div class="col mb-4" title="Crear control de pagos">
+            <a class="btn btn-lg btn-primary form-control rounded" type="button" href="{% url 'CreatePayment' BudgetID %}">
+                <i class='bx bxl-paypal bx-sm align-middle'></i>
+            </a>
+        </div>
+    </div>
+    <div title="Eliminar">
+        <a class="btn btn-lg btn-danger form-control rounded" type="button" href="{% url 'BudgetDeleteView' BudgetID %}">
+            <i class='bx bx-trash bx-sm align-middle'></i>
+        </a>
+    </div>
+{% else %}
+<legend class="text-center">Control de Pago Realizado</legend>
+<a class="btn btn-lg btn-primary form-control rounded mb-4" type="button" href="{% url 'DoctorPaymentBalance' BudgetID %}">
+    <i class='bx bxl-paypal bx-sm align-middle'></i>
+</a>
+{% endif %}
+{% endif %}
+{% endblock %}

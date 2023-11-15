@@ -1,0 +1,586 @@
+{% extends 'dLayout.html' %}
+{% block span %}
+<span>Inicio</span>
+{% endblock span %}
+
+{% block content %}
+
+{% if user.is_authenticated and user.usuario_administrador or user.idPersonal_id%}
+<div class="row">
+    <!-- Information -->
+    <div class="col-lg-8">
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row mt-3">
+                    <div class="col-sm-9">
+                        <legend class="mb-0" id="greetings"></legend>
+                    </div>
+                </div>
+                <div class="row my-4">
+                    <div class="col">
+                        <p class="mb-0">Estadísticas de Citas</p>
+                    </div>
+                    <canvas id="myChart"></canvas>
+                    <script>
+                        var labels = [];
+                        var labelsCancelled = [];
+                        var count = 0;
+                        // var dataXXX = [];
+                        $.getJSON('/doctor/', function (data) {
+                            // console.log(data)
+                            for (let index = 0; index < data.length; index++) {
+                                if (!data[index]['Patient'] && !data[index]['PaymentControl'] && !data[index]['idDoctorAppointment']) {
+                                    if (data[index]['date'][0] == '1') { 
+                                        data[index]['date'][0] = 'Enero';
+                                    }
+                                    else if (data[index]['date'][0] == '2') { 
+                                        data[index]['date'][0] = 'Febrero';
+                                    }
+                                    else if (data[index]['date'][0] == '3') { 
+                                        data[index]['date'][0] = 'Marzo';
+                                    }
+                                    else if (data[index]['date'][0] == '4') { 
+                                        data[index]['date'][0] = 'Abril';
+                                    }
+                                    else if (data[index]['date'][0] == '5') { 
+                                        data[index]['date'][0] = 'Mayo';
+                                    }
+                                    else if (data[index]['date'][0] == '6') { 
+                                        data[index]['date'][0] = 'Junio';
+                                    }
+                                    else if (data[index]['date'][0] == '7') { 
+                                        data[index]['date'][0] = 'Julio';
+                                    }
+                                    else if (data[index]['date'][0] == '8') {
+                                        data[index]['date'][0] = 'Agosto';
+                                    }
+                                    else if (data[index]['date'][0] == '9') { 
+                                        data[index]['date'][0] = 'Septiembre';
+                                    }
+                                    else if (data[index]['date'][0] == '10') { 
+                                        data[index]['date'][0] = 'Octubre';
+                                    }
+                                    else if (data[index]['date'][0] == '11') { 
+                                        data[index]['date'][0] = 'Noviembre';
+                                    }
+                                    else if (data[index]['date'][0] == '12') { 
+                                        data[index]['date'][0] = 'Diciembre';
+                                    }
+                                }
+                            }
+
+                            for (var i = 0; i < data.length; i++) {
+                                if (data[i].state == '2') {
+                                    labels.push(data[i].date);
+                                }
+                                // dataXXX.push(data[i].id);
+                            }
+
+                            for (var i = 0; i < data.length; i++) {
+                                if (data[i].state == '0') {
+                                    labelsCancelled.push(data[i].date);
+                                }
+                            }
+
+                            for (var i = 0; i < data.length; i++) {
+                                if (data[i].state == '1') {
+                                    count += 1;
+                                }
+                            }
+                            document.getElementById('NextAppointments').innerHTML = count;
+
+                            // Count the repeted dates
+                            const elementCounts = {};
+                            labels.forEach(element => {
+                                elementCounts[element] = (elementCounts[element] || 0) + 1;
+                            });
+
+                            // Count the repeted dates
+                            const elementCountsCancelled = {};
+                            labelsCancelled.forEach(element => {
+                                elementCountsCancelled[element] = (elementCountsCancelled[element] || 0) + 1;
+                            });
+
+                            // Count Active Patients
+                            count = 0;
+                            for (let i = 0; i < data.length; i++) {
+                                if (data[i]['Patient']) {
+                                    if (data[i]['PatientState'] == true) {
+                                        count += 1;
+                                    }
+                                }
+                            }
+                            document.getElementById('ActivePatients').innerHTML = count;
+
+                            // Count Inactive Patients
+                            count = 0;
+                            for (let i = 0; i < data.length; i++) {
+                                if (data[i]['Patient']) {
+                                    if (data[i]['PatientState'] == false) {
+                                        count += 1;
+                                    }
+                                }
+                            }
+                            document.getElementById('InactivePatients').innerHTML = count;
+
+                            // Count Treatments
+                            count = 0;
+                            for (let i = 0; i < data.length; i++) {
+                                if (data[i]['PaymentControl']) {
+                                    if (data[i]['PaymentState'] == false) {
+                                        count += 1;
+                                    }
+                                }
+                            }
+                            document.getElementById('PendingTreatments').innerHTML = count;
+
+                            const ctx = document.getElementById('myChart');
+                            new Chart(ctx, {
+                                type: 'bar',
+                                data: {
+                                    // labels: labels,
+                                    datasets: [{
+                                        label: 'Realizadas',
+                                        data: elementCounts,
+                                        borderWidth: 1,
+                                        backgroundColor: 'black',
+                                    }, {
+                                        label: 'Canceladas',
+                                        data: elementCountsCancelled,
+                                        borderWidth: 1,
+                                        backgroundColor: '#FF2400',
+                                    }],
+                                },
+                                options: {
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true
+                                        }
+                                    }
+                                }
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appointments -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card mb-4" >
+                    <div class="card-body">
+                        <h5 class="card-title m-0">Pacientes Registrados</h5>
+                        <div class="text-center p-5">
+                            <a href="{% url 'DoctorPatient' %}">
+                                <h1 id="ActivePatients"></h1>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card mb-4" >
+                    <div class="card-body">
+                        <h5 class="card-title m-0">Pacientes de Baja</h5>
+                        <div class="text-center p-5">
+                            <a href="{% url 'DoctorPatient' %}">
+                                <h1 id="InactivePatients"></h1>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <!-- Next Appointments -->
+        <div class="card mb-4" >
+            <div class="card-body">
+                <h5 class="card-title m-0">Citas Pendientes</h5>
+                <div class="text-center p-5">
+                    <a href="{% url 'Calendar' %}">
+                        <h1 id="NextAppointments"></h1>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Treatments -->
+        <div class="card mb-4" >
+            <div class="card-body">
+                <h5 class="card-title m-0">Tratamientos Pendientes</h5>
+                <div class="text-center p-5">
+                    <a href="{% url 'DoctorPaymentList' %}">
+                        <h1 id="PendingTreatments"></h1>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Clinic Information -->
+        <div class="card mb-4" >
+            <div class="card-body">
+                <h5 class="card-title m-0">Información de la Clínica</h5>
+                <div class="text-center p-2">
+                    <div class="my-3">
+                        <i class='bx-fw bx bx-buildings bx-sm'></i><span><small>Costado Sur Gasolinera UNO Guido, León,
+                                Nicaragua</small></span>
+                    </div>
+                    <div class="my-3">
+                        <i class='bx-fw bx bx-phone bx-sm'></i><span><small><a href="tel:+50587678998">+505
+                                    87678998</a></small></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% elif user.is_authenticated and user.idDoctor_id is not Null %}
+<div class="row">
+    <!-- Information -->
+    <div class="col-lg-8">
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row mt-3">
+                    <div class="col-sm-9">
+                        <legend class="mb-0" id="greetings"></legend>
+                    </div>
+                </div>
+                <div class="row my-4">
+                    <div class="col">
+                        <p class="mb-0">Estadísticas de Citas</p>
+                    </div>
+                    <canvas id="myChart"></canvas>
+                    <script>
+                        var labels = [];
+                        var labelsCancelled = [];
+                        var count = 0;
+                        $.getJSON('/doctor/', function (data) {
+                            for (let index = 0; index < data.length; index++) {
+                                if (!data[index]['Patient'] && !data[index]['PaymentControl'] && !data[index]['idDoctorAppointment']) {
+                                    if (data[index]['date'][0] == '1') { 
+                                        data[index]['date'][0] = 'Enero';
+                                    }
+                                    else if (data[index]['date'][0] == '2') { 
+                                        data[index]['date'][0] = 'Febrero';
+                                    }
+                                    else if (data[index]['date'][0] == '3') { 
+                                        data[index]['date'][0] = 'Marzo';
+                                    }
+                                    else if (data[index]['date'][0] == '4') { 
+                                        data[index]['date'][0] = 'Abril';
+                                    }
+                                    else if (data[index]['date'][0] == '5') { 
+                                        data[index]['date'][0] = 'Mayo';
+                                    }
+                                    else if (data[index]['date'][0] == '6') { 
+                                        data[index]['date'][0] = 'Junio';
+                                    }
+                                    else if (data[index]['date'][0] == '7') { 
+                                        data[index]['date'][0] = 'Julio';
+                                    }
+                                    else if (data[index]['date'][0] == '8') {
+                                        data[index]['date'][0] = 'Agosto';
+                                    }
+                                    else if (data[index]['date'][0] == '9') { 
+                                        data[index]['date'][0] = 'Septiembre';
+                                    }
+                                    else if (data[index]['date'][0] == '10') { 
+                                        data[index]['date'][0] = 'Octubre';
+                                    }
+                                    else if (data[index]['date'][0] == '11') { 
+                                        data[index]['date'][0] = 'Noviembre';
+                                    }
+                                    else if (data[index]['date'][0] == '12') { 
+                                        data[index]['date'][0] = 'Diciembre';
+                                    }
+                                }
+                            }
+
+                            for (var i = 0; i < data.length; i++) {
+                                if (data[i].state == '2' && data[i].idDoctorAppointment == '{{user.idDoctor_id}}') {
+                                    labels.push(data[i].date);
+                                }
+                            }
+
+                            for (var i = 0; i < data.length; i++) {
+                                if (data[i].state == '0' && data[i].idDoctorAppointment == '{{user.idDoctor_id}}') {
+                                    labelsCancelled.push(data[i].date);
+                                }
+                            }
+
+                            for (var i = 0; i < data.length; i++) {
+                                if (data[i].state == '1' && data[i].idDoctorAppointment == '{{user.idDoctor_id}}') {
+                                    count += 1;
+                                }
+                            }
+                            document.getElementById('NextAppointments').innerHTML = count;
+
+                            // Count the repeted dates
+                            const elementCounts = {};
+                            labels.forEach(element => {
+                                elementCounts[element] = (elementCounts[element] || 0) + 1;
+                            });
+
+                            // Count the repeted dates
+                            const elementCountsCancelled = {};
+                            labelsCancelled.forEach(element => {
+                                elementCountsCancelled[element] = (elementCountsCancelled[element] || 0) + 1;
+                            });
+
+                            // Count Active Patients
+                            count = 0;
+                            for (let i = 0; i < data.length; i++) {
+                                if (data[i]['Patient']) {
+                                    if (data[i]['PatientState'] == true) {
+                                        count += 1;
+                                    }
+                                }
+                            }
+                            document.getElementById('ActivePatients').innerHTML = count;
+
+                            // Count Inactive Patients
+                            count = 0;
+                            for (let i = 0; i < data.length; i++) {
+                                if (data[i]['Patient']) {
+                                    if (data[i]['PatientState'] == false) {
+                                        count += 1;
+                                    }
+                                }
+                            }
+                            document.getElementById('InactivePatients').innerHTML = count;
+
+                            // Count Treatments
+                            count = 0;
+                            for (let i = 0; i < data.length; i++) {
+                                if (data[i]['PaymentControl']) {
+                                    if (data[i]['PaymentState'] == false) {
+                                        count += 1;
+                                    }
+                                }
+                            }
+                            document.getElementById('PendingTreatments').innerHTML = count;
+
+                            const ctx = document.getElementById('myChart');
+                            new Chart(ctx, {
+                                type: 'bar',
+                                data: {
+                                    // labels: labels,
+                                    datasets: [{
+                                        label: 'Realizadas',
+                                        data: elementCounts,
+                                        borderWidth: 1,
+                                        backgroundColor: 'black',
+                                    }, {
+                                        label: 'Canceladas',
+                                        data: elementCountsCancelled,
+                                        borderWidth: 1,
+                                        backgroundColor: '#FF2400',
+                                    }],
+                                },
+                                options: {
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true
+                                        }
+                                    }
+                                }
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appointments -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card mb-4" >
+                    <div class="card-body">
+                        <h5 class="card-title m-0">Pacientes Registrados</h5>
+                        <div class="text-center p-5">
+                            <a href="{% url 'DoctorPatient' %}">
+                                <h1 id="ActivePatients"></h1>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card mb-4" >
+                    <div class="card-body">
+                        <h5 class="card-title m-0">Pacientes de Baja</h5>
+                        <div class="text-center p-5">
+                            <a href="{% url 'DoctorPatient' %}">
+                                <h1 id="InactivePatients"></h1>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <!-- Next Appointments -->
+        <div class="card mb-4" >
+            <div class="card-body">
+                <h5 class="card-title m-0">Citas Pendientes</h5>
+                <div class="text-center p-5">
+                    <a href="{% url 'Calendar' %}">
+                        <h1 id="NextAppointments"></h1>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Treatments -->
+        <div class="card mb-4" >
+            <div class="card-body">
+                <h5 class="card-title m-0">Tratamientos Pendientes</h5>
+                <div class="text-center p-5">
+                    <a href="{% url 'DoctorPaymentList' %}">
+                        <h1 id="PendingTreatments"></h1>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Clinic Information -->
+        <div class="card mb-4" >
+            <div class="card-body">
+                <h5 class="card-title m-0">Información de la Clínica</h5>
+                <div class="text-center p-2">
+                    <div class="my-3">
+                        <i class='bx-fw bx bx-buildings bx-sm'></i><span><small>Costado Sur Gasolinera UNO Guido, León,
+                                Nicaragua</small></span>
+                    </div>
+                    <div class="my-3">
+                        <i class='bx-fw bx bx-phone bx-sm'></i><span><small><a href="tel:+50587678998">+505
+                                    87678998</a></small></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% elif user.is_authenticated and user.idPatient_id is not Null %}
+<div class="row">
+    <!-- Information -->
+    <div class="col-lg-8">
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-9">
+                        <legend class="my-5" id="greetings"></legend>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <!-- Clinic Information -->
+        <div class="card mb-4" >
+            <div class="card-body">
+                <h5 class="card-title m-0">Información de la Clínica</h5>
+                <div class="text-center p-1">
+                    <div class="my-1">
+                        <i class='bx-fw bx bx-buildings bx-sm'></i><span><small>Costado Sur Gasolinera UNO Guido, León,
+                                Nicaragua</small></span>
+                    </div>
+                    <div class="my-3">
+                        <i class='bx-fw bx bx-phone bx-sm'></i><span><small><a href="tel:+50587678998">+505
+                                    87678998</a></small></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+<script>
+    var myDate = new Date();
+    var hrs = myDate.getHours();
+
+    var greet;
+
+    if (hrs < 12)
+        greet = 'Buenos días';
+    else if (hrs >= 12 && hrs <= 17)
+        greet = 'Buenas tardes';
+    else if (hrs >= 17 && hrs <= 24)
+        greet = 'Buenas noches';
+
+
+    // name = '{{ testme }}'.replace('Bienvenido,', '');
+    // name = '{{ testme }}'.replace('Bienvenida,', '');
+
+    document.getElementById('greetings').innerHTML = greet; //+ name;
+</script>
+<style>
+    body {
+        margin-top: 20px;
+        color: #1a202c;
+        text-align: left;
+        background-color: #e2e8f0;
+    }
+
+    .main-body {
+        padding: 15px;
+    }
+
+    .card {
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .1), 0 1px 2px 0 rgba(0, 0, 0, .06);
+    }
+
+    .card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 0 solid rgba(0, 0, 0, .125);
+        border-radius: .25rem;
+    }
+
+    .card-body {
+        flex: 1 1 auto;
+        min-height: 1px;
+        padding: 1rem;
+    }
+
+    .gutters-sm {
+        margin-right: -8px;
+        margin-left: -8px;
+    }
+
+    .gutters-sm>.col,
+    .gutters-sm>[class*=col-] {
+        padding-right: 8px;
+        padding-left: 8px;
+    }
+
+    .mb-3,
+    .my-3 {
+        margin-bottom: 1rem !important;
+    }
+
+    .bg-gray-300 {
+        background-color: #e2e8f0;
+    }
+
+    .h-100 {
+        height: 100% !important;
+    }
+
+    .shadow-none {
+        box-shadow: none !important;
+    }
+</style>
+{% endblock %}

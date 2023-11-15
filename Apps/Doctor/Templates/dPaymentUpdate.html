@@ -1,0 +1,218 @@
+{% extends 'dLayout.html' %}
+{% block span %}
+<span>Control de Pagos</span>
+{% endblock span %}
+
+{% block content %}
+{% include 'message.html' %}
+<div class="row">
+    <div class="col">
+        <legend>
+            <legend class="fw-bold">Paciente</legend> {{ Patient.FirstName }} {{ Patient.SecondName }}
+            {{ Patient.FirstSurname }} {{ Patient.SecondSurname }}
+        </legend>
+    </div>
+    <div class="col">
+        <legend class="text-end pt-2"></i>
+            <legend class="fw-bold">Fecha</legend>{{ Date }}
+        </legend>
+    </div>
+    <legend class="pt-2">
+        <legend class="fw-bold">Médico</legend>{{ Doctor.FirstName }} {{ Doctor.SecondName }} {{ Doctor.FirstSurname}}
+        {{ Doctor.SecondSurname }}
+    </legend>
+</div>
+
+<h2 class="mt-5">Control de Pagos</h2>
+{% if user.is_authenticated and user.usuario_administrador or user.idDoctor_id or user.idPersonal_id%}
+{% if PaymentDone != True %}
+    <table class="table mt-2">
+        <thead>
+            <tr style="text-align: center">
+                <th scope="col">Monto a Abonar</th>
+                <th scope="col">Deuda Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr style="text-align: center">
+                <td>
+                    <form method="post" onsubmit="return check();"> {% csrf_token %}
+                        <div class="form-group">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-text">C$</span>
+                                    <input type="number" class="form-control" name="InputPayment" id="InputPayment"
+                                        aria-label="Amount (to the nearest NIO)" placeholder="Monto a Abonar" required>
+                                    <span>
+                                        <button class="btn btn-primary rounded-end" type="submit">
+                                            <i class='bx bx-money bx-sm align-middle'></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </td>
+                <td scope="row" class="align-middle">C${{ PaymentControl }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="alert alert-danger" id="success-alert">
+        <span>Monto no válido</span>
+    </div>
+{% endif %}
+{% endif %}
+
+<script>
+    function check() {
+        var input = document.getElementById('InputPayment').value;
+        var value = '{{ PaymentControl }}'
+        console.log(input)
+        if (input > parseFloat(value) || input < 0) {
+            $("#success-alert").fadeTo(2000, 500).slideUp(500, function () {
+                $("#success-alert").slideUp(500);
+            });
+            return false
+        }
+        else {
+            return true
+        }
+    }
+
+    $(document).ready(function () {
+        $("#success-alert").hide();
+    });
+</script>
+
+<div class="accordion" id="accordionExample">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                aria-expanded="true" aria-controls="collapseOne">Historial de Pagos</button>
+        </h2>
+        <div id="collapseOne" class="accordion-collapse collapse show w-100" aria-labelledby="headingOne">
+            <div class="accordion-body">
+                <table class="table mt-2">
+                    <thead>
+                        <tr class="text-center">
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Montos Pagados</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pays in Pays %}
+                        <tr>
+                            <td>
+                                <input class="form-control" placeholder="0" type="text"
+                                    name="Quantity-{{ forloop.counter }}" id="Quantity-{{ forloop.counter }}"
+                                    value="{{ pays.Date }}" readonly />
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-text">C$</span>
+                                    <input class="form-control" type="text" id="Cost-{{ forloop.counter }}"
+                                        name="Cost-{{ forloop.counter }}" value="{{ pays.Paid }}" readonly />
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingTwo">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                Detalle del Tratamiento
+            </button>
+        </h2>
+        <div id="collapseTwo" class="accordion-collapse collapse w-100" aria-labelledby="headingTwo">
+            <div class="accordion-body">
+                <table class="table mt-2">
+                    <thead>
+                        <tr class="text-center">
+                            <th scope="col">Cantidad</th>
+                            <th scope="col">Tratamiento</th>
+                            <th scope="col">Precio Unitario</th>
+                            <th scope="col">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table">
+                        {% for budgetField in BudgetFields %}
+                        <tr>
+                            <td>
+                                <input class="form-control" placeholder="0" type="text"
+                                    name="Quantity-{{ forloop.counter }}" id="Quantity-{{ forloop.counter }}"
+                                    value="{{ budgetField.Quantity }}" readonly />
+                            </td>
+                            <td>
+                                <input class="form-control" type="text" id="Treatment-{{ forloop.counter }}"
+                                    name="Treatment-{{ forloop.counter }}" value="{{ budgetField.Treatment }}"
+                                    readonly />
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-text">C$</span>
+                                    <input class="form-control" type="text" id="Cost-{{ forloop.counter }}"
+                                        name="Cost-{{ forloop.counter }}" value="{{ budgetField.Cost }}" readonly />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-text">C$</span>
+                                    <input class="form-control" placeholder="0.00" type="text" id="Total-0" readonly />
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="text-center">
+                            <div class="input-group">
+                                <span class="input-group-text">C$</span>
+                                <input class="form-control" type="text" id="grandtotal" readonly />
+                            </div>
+                        </td>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+
+<script>
+    window.addEventListener("load", function () {
+        var rows = $('#table').children().length;
+        var columns = document.getElementById('table').rows[0].cells.length
+
+        for (i = 0; i < rows; i++) {
+            for (let j = 0; j < columns; j++) {
+                var x = document.getElementById("table").rows[i].cells[j].getElementsByTagName('input')[0];
+                calculateRow($(x).closest("tr"));
+                calculateGrandTotal();
+            }
+        }
+    });
+
+    function calculateRow(row) {
+        var price = + row.find('input[id^="Cost"]').val();
+        var qty = + row.find('input[id^="Quantity"]').val();
+        row.find('input[id^="Total"]').val((price * qty).toFixed(2));
+    }
+
+    function calculateGrandTotal() {
+        var grandTotal = 0;
+        $("table").find('input[id^="Total"]').each(function () {
+            grandTotal += +$(this).val();
+        });
+        $("#grandtotal").val(grandTotal.toFixed(2));
+    }
+</script>
+{% endblock %}

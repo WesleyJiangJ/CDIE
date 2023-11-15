@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clínica Dental Integral Especializada</title>
+    <link rel="stylesheet" href="https://bootswatch.com/5/lux/bootstrap.min.css">
+    <script src="https://bootswatch.com/_vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary" style="position: fixed; width: 100%; z-index: 9999;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'Index' %}">COIE</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01"
+                aria-controls="navbarColor01" aria-expanded="true" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarColor01">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'Index' %}">Inicio
+                            <span class="visually-hidden">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'About' %}">Nosotros</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'Contact' %}">Contáctanos</a>
+                    </li>
+                    <script>
+                        const activePage = window.location.pathname;
+                        //console.log(activePage)
+                        const navLinks = document.querySelectorAll('nav a').forEach(link => {
+                            if (link.href.includes(`${activePage}`)) {
+                                link.classList.add('active');
+                            }
+                        });
+                    </script>
+                </ul>
+                <form class="d-flex">
+                    <li class="nav-item" style="list-style-type: none; color: white;">
+                        <a class="nav-link" href="{% url 'login' %}" role="button">
+                            {% block login %} Iniciar Sesión {% endblock %}
+                        </a>
+                    </li>
+                </form>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<body>
+    {% block logo %}
+    {% load static %}
+    <div class="DivPadding">
+        <img src="{% static 'Logo.png' %}" style="width: 40%; height: 40%;">
+    </div>
+    {% endblock %}
+    <div style="padding-top: 1.25em;">
+        <!-- <div class="container-fluid" style="padding-top: 100px; padding-bottom: 1%;"> -->
+        {% block content %}
+
+        {% endblock %}
+    </div>
+</body>
+
+<style>
+    .DivPadding {
+        background-color: rgb(26, 26, 26);
+        padding-top: 2.188em;
+    }
+
+    @media screen and (max-width:750px) {
+        .DivPadding {
+            padding-top: 4.063em;
+        }
+    }
+</style>
+
+<div class="container-fluid">
+    <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top" style="bottom: 0;">
+        <div class="col-md-4 d-flex align-items-center">
+            <span class="mb-3 mb-md-0 text-muted">© 2023 Company, Inc</span>
+        </div>
+    </footer>
+</div>
+
+</html>

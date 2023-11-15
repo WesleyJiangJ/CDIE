@@ -1,0 +1,70 @@
+{% extends 'layout.html' %}
+
+{% block login %}{% endblock %}
+
+{% block logo %}{% endblock %}
+
+{% block content %}
+<div class="container-fluid row d-flex justify-content-center align-items-center h-100" style="padding-top: 5em;">
+    <div class="col col-xl-10">
+        <div class="row g-0">
+            <div class="col-md-6 col-lg-5 d-none d-md-block">
+                <img src="https://images.unsplash.com/photo-1662837625427-970713d74aa6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80"
+                    class="img-fluid" style="border-radius: 1rem 0 0 1rem;" />
+            </div>
+            <div class="col-md-6 col-lg-7 d-flex align-items-center">
+                <div class="card-body p-4 p-lg-5 text-black">
+                    <form method="POST" class="needs-validation" novalidate>
+                        <div class="d-flex align-items-center mb-3 pb-1">
+                            <span class="h1 fw-bold mb-0">Bienvenido</span>
+                        </div>
+                            <div class="form-group mb-4">
+                                {% csrf_token %}
+                                <label class="pt-3" for="{{ form.username.name }}">{{ form.username.label }}</label>
+                                <!-- {{ form.username }} -->
+                                <input class="form-control" type="text" name="username" id="username" placeholder="user@example.com" value="admin@coie.com" required>
+                                
+                                <label class="pt-3" for="{{ form.password.name }}">{{ form.password.label }}</label>
+                                <!-- {{ form.password }} -->
+                                <input class="form-control" type="password" name="password" id="password" placeholder="••••••••" value="123" required>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-lg btn-primary" type="submit" style="border-radius: 5px;">Iniciar
+                                        Sesión</button>
+                                </div>
+                            </div>
+                        <a class="small text-muted" href="#!">¿Olvidaste la contraseña?</a>
+                        <!-- <p class="mb-5 pb-lg-2" style="color: #393f81;">¿Aún no tienes una cuenta? <a href="#!"
+                                    style="color: #393f81;">Registrate aquí</a></p> -->
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (function () {
+        'use strict'
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.querySelectorAll('.needs-validation')
+
+        // Loop over them and prevent submission
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+
+                    form.classList.add('was-validated')
+                }, false)
+            })
+    })()
+</script>
+{% endblock %}

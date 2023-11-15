@@ -1,0 +1,303 @@
+{% extends 'dLayout.html' %}
+{% block span %}
+<span> {% if layout == 'Update' %} Modificar Presupuesto {% else %} Presupuesto {% endif %} </span>
+{% endblock span %}
+{% block content %}
+<fieldset>
+    <form id="myform" method="POST">
+        {% csrf_token %}
+        <div class="row">
+            {% if layout != 'Update' %}
+            <div class="col">
+                <div class="form-group">
+                    <label for="InputPatient" class="form-label mt-2">Paciente</label>
+                    <select name="InputPatient" class="form-select" id="InputPatient" placeholder="Seleccione un Paciente" required>
+                        <option value="">Seleccione un Paciente</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="form-group">
+                    <label for="InputDoctor" class="form-label mt-2">Medico</label>
+                    <input class="form-control" type="text" id="doctor" readonly>
+                    <input type="text" id="idDoctor" name="idDoctor" hidden>
+                </div>
+            </div>
+            {% else %}
+            <div class="col">
+                <div class="form-group">
+                    <label for="InputPatient" class="form-label mt-2">Paciente</label>
+                    <input class="form-control" type="text" id="patient" value="{{ patientName }}" readonly>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="form-group">
+                    <label for="InputDoctor" class="form-label mt-2">Médico</label>
+                    <input class="form-control" type="text" id="InputDoctor" value="{{ doctorName }}" readonly>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        {% if layout != 'Update' %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Cantidad</th>
+                    <th scope="col">Tratamiento</th>
+                    <th scope="col">Precio Unitario</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="table">
+                <tr>
+                    <td>
+                        <input class="form-control" placeholder="0" type="number" name="Quantity-0" id="Quantity-0" required />
+                    </td>
+                    <td>
+                        <input class="form-control" placeholder="Tratamiento a realizar" type="text" id="Treatment-0"
+                            name="Treatment-0" required />
+                    </td>
+                    <td>
+                        <div class="input-group">
+                            <span class="input-group-text">C$</span>
+                            <input class="form-control" placeholder="0.00" type="number" id="Cost-0" name="Cost-0" required />
+                        </div>
+                    </td>
+                    <td>
+                        <div class="input-group">
+                            <span class="input-group-text">C$</span>
+                            <input class="form-control" placeholder="0.00" type="text" id="Total-0" readonly="readonly" />
+                        </div>
+                    </td>
+                    <td>
+                        <button class="form-control btn btn-danger rounded" type="button" id="btnDelete" onclick="deleteRow()">
+                            <i class="bx bx-trash bx-sm align-middle"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <td colspan="1">
+                    <button class="form-control btn btn-lg btn-primary rounded mb-2" type="button" id="addrow">
+                        <i class="bx bx-plus bx-sm align-middle"></i>
+                    </button>
+                </td>
+                <td colspan="2">
+                    <button class="form-control btn btn-lg btn-primary rounded mb-2" type="submit"
+                        onclick="getAll()">
+                        <i class="bx bx-save bx-sm align-middle"></i>
+                    </button>
+                </td>
+                <td colspan="2">
+                    <div class="input-group">
+                        <span class="input-group-text">C$</span>
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="grandtotal" placeholder="C$0.00" readonly>
+                            <label for="grandtotal">Total</label>
+                        </div>
+                    </div>
+                </td>
+            </tfoot>
+        </table>
+        {% else %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Cantidad</th>
+                    <th scope="col">Tratamiento</th>
+                    <th scope="col">Precio Unitario</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="table">
+                {% for budgetData in BudgetFieldData %}
+                {% if forloop.counter == 1 %}
+                <input type="text" name="idMainBudget" id="idMainBudget" value="{{ budgetData.idMainBudget_id }}" hidden>
+                {% endif %}
+                <tr>
+                    <td>
+                        <input class="form-control" placeholder="0" type="number" name="Quantity-{{ forloop.counter }}"
+                            id="Quantity-{{ forloop.counter }}" value="{{ budgetData.Quantity }}" required />
+                    </td>
+                    <td>
+                        <input class="form-control" placeholder="Tratamiento a realizar" type="text" id="Treatment-{{ forloop.counter }}"
+                            name="Treatment-{{ forloop.counter }}" value="{{ budgetData.Treatment }}" required />
+                    </td>
+                    <td>
+                        <div class="input-group">
+                            <span class="input-group-text">C$</span>
+                            <input class="form-control" placeholder="0.00" type="number" id="Cost-{{ forloop.counter }}"
+                                name="Cost-{{ forloop.counter }}" value="{{ budgetData.Cost }}" required/>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" name="eachID-{{ forloop.counter }}" id="eachID-{{ forloop.counter }}" value="{{ budgetData.id }}" hidden>
+                        <div class="input-group">
+                            <span class="input-group-text">C$</span>
+                            <input class="form-control" placeholder="0.00" type="text" id="Total-0" readonly/>
+                        </div>
+                    </td>
+                    <td>
+                        <button class="form-control btn btn-danger rounded" type="button" id="btnDelete"
+                            onclick="deleteRow()">
+                            <i class="bx bx-trash bx-sm align-middle"></i>
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <td colspan="1">
+                    <button class="form-control btn btn-lg btn-primary rounded mb-2" type="button" id="addrow">
+                        <i class="bx bx-plus bx-sm align-middle"></i>
+                    </button>
+                </td>
+                <td colspan="2">
+                    <button class="form-control btn btn-lg btn-primary rounded mb-2" type="submit"
+                        onclick="getAll()">
+                        <i class="bx bx-save bx-sm align-middle"></i>
+                    </button>
+                </td>
+                <td colspan="2">
+                    <div class="input-group">
+                        <span class="input-group-text">C$</span>
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="grandtotal" placeholder="C$0.00" readonly>
+                            <label for="grandtotal">Total</label>
+                        </div>
+                    </div>
+                </td>
+            </tfoot>
+        </table>
+
+        <script>
+            window.addEventListener("load", function () {
+                var rows = $('#table').children().length;
+                var columns = document.getElementById('table').rows[0].cells.length
+
+                for (i = 0; i < rows; i++) {
+                    for (let j = 0; j < columns; j++) {
+                        var x = document.getElementById("table").rows[i].cells[j].getElementsByTagName('input')[0];
+                        calculateRow($(x).closest("tr"));
+                        calculateGrandTotal();
+                    }
+                }
+            });
+        </script>
+
+        {% endif %}
+    </form>
+</fieldset>
+<script>
+    $(document).ready(function () {
+        var counter = 0;
+
+        $("#addrow").on("click", function () {
+            counter++;
+
+            var newRow = $("<tr>");
+            var cols = "";
+            cols += '<td><input class="form-control" placeholder="0" type="number" name="Quantity-' + (counter+10) + '" id="Quantity-' + (counter+10) + '" required/></td>';
+            cols += '<td><input class="form-control" placeholder="Tratamiento a realizar" type="text" name="Treatment-' + (counter+10) + '" id="Treatment-' + (counter+10) + '" required/></td>';
+            cols += '<td><div class="input-group"><span class="input-group-text">C$</span><input class="form-control" placeholder="0.00" type="number" name="Cost-' + (counter+10) + '" id="Cost-' + (counter+10) + '" required/></div></td>';
+            if ('{{ layout }}' == 'Update') {
+                cols += '<td hidden><input type="text" id="eachID-' + (counter + 50) + '" name="eachID-' + (counter + 50) + '" value = "Empty"/></td>';
+            }
+            cols += '<td><div class="input-group"><span class="input-group-text">C$</span><input class="form-control" placeholder="0.00" type="text" id="Total-' + (counter+10) + '" readonly="readonly" /></div></td>';
+            cols += '<td><button class="form-control btn btn-danger rounded" id="btnDelete" onclick="deleteRow()"><i class="bx bx-trash bx-sm align-middle"></i></button></td>';
+            newRow.append(cols);
+
+            $("table").append(newRow);
+        });
+
+        $("table").on("keyup", 'input[id^="Cost"], input[id^="Quantity"]', function (event) {
+            calculateRow($(this).closest("tr"));
+            calculateGrandTotal();
+        });
+
+        if ('{{ layout }}' === 'Update') {
+            var x = document.getElementById("table").rows.length;
+        }
+    });
+
+    function calculateRow(row) {
+        var price = + row.find('input[id^="Cost"]').val();
+        var qty = + row.find('input[id^="Quantity"]').val();
+        row.find('input[id^="Total"]').val((price * qty).toFixed(2));
+    }
+
+    function calculateGrandTotal() {
+        var grandTotal = 0;
+        $("table").find('input[id^="Total"]').each(function () {
+            grandTotal += +$(this).val();
+        });
+        $("#grandtotal").val(grandTotal.toFixed(2));
+    }
+
+    function deleteRow() {
+        $("#table").on('click', '#btnDelete', function () {
+            var count = $('#table tr').length;
+            if (count > 1) {
+                $(this).closest("tr").remove();
+                calculateGrandTotal();
+                $(this).closest('tr').remove();
+            }
+        });
+    }
+
+    // JSON
+    function listPatients() {
+        var url = window.location.pathname;
+        var id = url.substring(url.lastIndexOf('/') + 1);
+        $.ajax({
+            url: '/doctor/budgetdoctor/' + id,
+            type: 'GET',
+            dataType: 'JSON',
+            success: function (response) {
+                patient(response);
+                doctor(response, id);
+            },
+            error: function (response) {
+                //console.log(response)
+            },
+        });
+    };
+
+    function doctor(response, id) {
+        for (let i = 0; i < response.length; i++) {
+            if (response[i].id == id && response[i].Role == '0') {
+                document.getElementById("doctor").value = response[i].Fullname
+                document.getElementById("idDoctor").value = response[i].id
+            }
+        }
+    }
+
+    function patient(response) {
+        const sel = document.getElementById("InputPatient");
+        var option;
+        var j = 0;
+
+        for (let i = 0; i < response.length; i++) {
+            if (response[i].Role == '1') {
+                j++;
+                option = 'opt' + [j]
+                option = document.createElement("option");
+                option.value = response[i].id;
+                option.text = response[i].Fullname;
+                sel.add(option, null);
+            }
+        }
+    }
+
+    if ('{{ layout }}' != 'Update') {
+        $(document).ready(function () {
+            listPatients();
+        });
+    }
+</script>
+{% endblock content %}

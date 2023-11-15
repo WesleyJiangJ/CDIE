@@ -1,0 +1,144 @@
+{% extends 'dLayout.html' %}
+{% block span %}
+<span>{% if Span == 'HP' %} Historial de Pagos Terminados {% elif Span == 'HC' %} Historial de Citas {% elif Span == 'HB' %} Historial de Presupuestos {% elif Span == 'HO' %} Historial Odontograma {% endif %}</span>
+{% endblock span %}
+
+{% block content %}
+
+{% if Span == 'HP' %}
+    {% if CheckPaymentDoneHistory == '1' %}
+        {% for j in MainBudget %}
+            {% for i in Data %}
+                {% if j.id == i.idMainBudget_id %}
+                    {% if What == '0' %}
+                        {% if j.idPatient_id == Patient %}
+                            {% if i.Done == True %}
+                                <div class="card text-white bg-primary mb-3 rounded">
+                                    <a class="btn btn-primary rounded" href="{% url 'DoctorPaymentBalance' j.id %}">
+                                        <!-- <div class="card-header">Header</div> -->
+                                        <div class="card-body">
+                                            <h4 class="card-title">Control de Pago <strong> {{ i.id }} </strong> </h4>
+                                            <!-- <p class="card-text">{{ i.Date }}</p> -->
+                                        </div>
+                                    </a>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    {% else %}
+                    {% if j.idDoctor_id == Doctor %}
+                        {% if i.Done == True %}
+                            <div class="card text-white bg-primary mb-3 rounded">
+                                <a class="btn btn-primary rounded" href="{% url 'DoctorPaymentBalance' j.id %}">
+                                    <!-- {# Main Budget id: {{ j.id }}
+                                    Payment Control id: {{ i.id }} #} -->
+                                    <!-- <div class="card-header">Header</div> -->
+                                    <div class="card-body">
+                                        <h4 class="card-title">Control de Pago <strong> {{ i.id }} </strong> </h4>
+                                        <!-- <p class="card-text">{{ i.Date }}</p> -->
+                                    </div>
+                                </a>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    {% else %}
+    <div class="h-100 d-flex align-items-center justify-content-center">
+        <i class='bx bx-message-square-x bx-lg align-middle'></i>
+    </div>
+    {% endif %}
+{% elif Span == 'HC' %}
+    {% if CheckAppointmentsHistory == '1' %}
+        {% for i in Appointments %}
+            {% if i.Status != '1' %}
+                {% if What == '0' %}   
+                    {% if i.idPatient_id == Patient %}
+                        <div class="card text-white {% if i.Status == '0' %} bg-danger {% else %} bg-primary {% endif %} mb-3 rounded">
+                            <div class="card-header">{{ i.Description }}</div>
+                            <div class="card-body">
+                                <h4 class="card-title">Cita <strong> {{ i.id }} </strong> </h4>
+                                <p class="card-text">{{ i.Date }}</p>
+                            </div>
+                            <div class="card-header"> 
+                                {% if i.Status == '0' %}
+                                    <i class='bx-fw bx bxs-no-entry'></i>Cancelada
+                                {% elif i.Status == '2' %}
+                                    <i class='bx-fw bx bxs-badge-check'></i>Realizada
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
+                {% else %}
+                {% if i.idDoctor_id == Doctor %}
+                <div class="card text-white bg-primary mb-3 rounded">
+                    <div class="card-header">{{ i.Description }}</div>
+                    <div class="card-body">
+                        <h4 class="card-title">Cita <strong> {{ i.id }} </strong> </h4>
+                        <p class="card-text">{{ i.Date }}</p>
+                    </div>
+                    <div class="card-header"> 
+                        {% if i.Status == '0' %}
+                            <i class='bx-fw bx bxs-no-entry'></i>Cancelada
+                        {% elif i.Status == '2' %}
+                            <i class='bx-fw bx bxs-badge-check'></i>Realizada
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    {% else %}
+    <div class="h-100 d-flex align-items-center justify-content-center">
+        <i class='bx bx-message-square-x bx-lg align-middle'></i>
+    </div>
+    {% endif %}
+{% elif Span == 'HB' %}
+    {% if CheckBudgetsHistory == '1' %}
+        {% for i in Budget %}
+            {% if i.State == '0' %}
+            {% if i.idPatient_id == Patient %}
+            <div class="card text-white bg-primary mb-3 rounded">
+                <a class="btn btn-primary rounded" href="{% url 'DoctorPaymentBalance' i.id %}">
+                    <!-- <div class="card-header">Header</div> -->
+                    <div class="card-body">
+                        <h4 class="card-title">Presupuesto <strong> {{ i.id }} </strong> </h4>
+                        <!-- <p class="card-text">{{ i.Date }}</p> -->
+                    </div>
+                </a>
+            </div>
+            {% endif %}
+            {% endif %}
+        {% endfor %}
+    {% else %}
+    <div class="h-100 d-flex align-items-center justify-content-center">
+        <i class='bx bx-message-square-x bx-lg align-middle'></i>
+    </div>
+    {% endif %}
+<!-- Odontogram History -->
+{% elif Span == 'HO' %}
+{% if CheckOdontogramHistory == '1' %}
+    {% for i in Mouth %}
+        {% if i.state == '0' %}
+        {% if i.idPatient_id == Patient %}
+        <div class="card text-white bg-primary mb-3 rounded">
+            <a class="btn btn-primary rounded" href="{% url 'OdontogramView' i.id %}">
+                <!-- <div class="card-header">Header</div> -->
+                <div class="card-body">
+                    <h4 class="card-title">Odontograma <strong> {{ i.id }} </strong> </h4>
+                    <!-- <p class="card-text">{{ i.Date }}</p> -->
+                </div>
+            </a>
+        </div>
+        {% endif %}
+        {% endif %}
+    {% endfor %}
+{% else %}
+<div class="h-100 d-flex align-items-center justify-content-center">
+    <i class='bx bx-message-square-x bx-lg align-middle'></i>
+</div>
+{% endif %}
+{% endif %}
+{% endblock content %}

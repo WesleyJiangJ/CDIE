@@ -1,0 +1,82 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<center>
+    <h1>Contáctanos</h1>
+</center>
+<div class="container"> <!-- ¿Usar el container-fluid? -->
+    <form action="#" method="post">
+        {% csrf_token %}
+        <label class="pt-3" for="{{ form.name.name }}">{{ form.name.label }}</label>
+        {{ form.name }}
+        <label class="pt-3" for="{{ form.surname.name }}">{{ form.surname.label }}</label>
+        {{ form.surname }}
+        <label class="pt-3" for="{{ form.email.name }}">{{ form.email.label }}</label>
+        {{ form.email }}
+        <label class="pt-3" for="{{ form.description.name }}">{{ form.description.label }}</label>
+        {{ form.description }}
+
+        <div class="form-group mb-4 pt-3">
+            <div class="d-grid gap-2">
+                <button class="btn btn-lg btn-primary" type="submit" style="border-radius: 5px;">Enviar</button>
+            </div>
+        </div>
+    </form>
+</div>
+<center>
+    <h1 class="m-5">Síguenos en Redes Sociales</h1>
+    <a href="http://www.facebook.com/Odontointegralespecializada" target="_blank" class="fa fa-facebook"></a>
+    <a href="https://instagram.com/clinicadentalintegralespe?igshid=YmMyMTA2M2Y=" target="_blank" class="fa fa-instagram"></a>
+    <a href="https://wa.me/50588641934" target="_blank" class="fa fa-whatsapp"></a>
+</center>
+
+<center><h1 class="m-5">Ubícanos</h1></center>
+<div class="container">
+    <center><iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d257.3987545508862!2d-86.89047945749867!3d12.4347289451736!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sni!4v1669084966441!5m2!1sen!2sni" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></center>
+    <center><label>Costado Sur Gasolinera UNO Guido, León, Nicaragua</label></center>
+</div>
+
+<style>
+    /* Style all font awesome icons */
+    .fa {
+        padding: 20px;
+        font-size: 50px;
+        width: 90px;
+        text-align: center;
+        text-decoration: none;
+    }
+
+    /* Add a hover effect if you want */
+    .fa:hover {
+        opacity: 0.9;
+    }
+
+    /* Facebook */
+    .fa-facebook {
+        background: #3B5998;
+        color: white;
+    }
+
+    /* Twitter */
+    .fa-twitter {
+        background: #55ACEE;
+        color: white;
+    }
+
+    /* WhatsApp */
+    .fa-whatsapp {
+        background: rgb(37 211 102);
+        color: white;
+    }
+
+    /* Instagram */
+    .fa-instagram {
+        color: white;
+        background: #f09433;
+        background: -moz-linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+        background: -webkit-linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+        background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    }
+</style>
+{% endblock %}

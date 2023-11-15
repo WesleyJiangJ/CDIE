@@ -1,0 +1,187 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<center>
+    <h1>Sobre Nosotros</h1>
+</center>
+<div class="container">
+    <label>Somos una clínica dental en la que nuestra prioridad es la salud de nuestros pacientes, haciéndole sentir
+        como en
+        su propia casa, brindándole el mejor servicio y con los mejores materiales importados, así garantizamos nuestro
+        trabajo, tranquilidad y su confianza.
+        Nuestra meta, es asegurarnos que cada uno de nuestros pacientes experimente una atmósfera relajada, confortable,
+        única y sea tratado con un toque suave que se merece.
+    </label>
+</div>
+<center>
+    <h1 class="text-muted m-5">Nuestro Equipo</h1>
+</center>
+
+<div class="row">
+    <div class="col">
+        <div class="blog"
+            style="background: url(https://rockfamilydental.com/static/e069f1c9bc91428ebf7451449439a201/867c5/720x1080.jpg) no-repeat;">
+            <div class="title-box">
+                <h3> Dra. Daniela Maria Ruiz Sandoval </h3>
+                <hr />
+                <div class="intro">
+                    Endodoncista
+                </div>
+            </div>
+            <div class="info">
+                <!-- <img src="https://tiiz.es/wp-content/uploads/2020/08/Endodoncia-todo-lo-que-necesitas-saber.jpg" style="height: 100px;"> -->
+                <br>
+                <span>Información Pendiente</span>
+            </div>
+            <div class="color-overlay"></div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="blog"
+            style="background: url(https://www.cosmidental.com/public/assets/images/uploads/image_50383873.JPG) no-repeat;">
+            <div class="title-box">
+                <h3> Dra. Anayanci López Poveda </h3>
+                <hr />
+                <div class="intro">
+                    General
+                </div>
+            </div>
+            <div class="info">
+                <br>
+                <span>Información Pendiente</span>
+            </div>
+            <div class="color-overlay"></div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="blog"
+            style="background: url(https://daviesandseeley.co.uk/wp-content/uploads/2021/03/Helen-Donaldson.png) no-repeat;">
+            <div class="title-box">
+                <h3>Dr. Juan Leiva</h3>
+                <hr />
+                <div class="intro">
+                    Periodoncista
+                </div>
+            </div>
+            <div class="info">
+                <br>
+                <span>Información Pendiente</span>
+            </div>
+            <div class="color-overlay"></div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .col {
+        padding-bottom: 50px;
+    }
+
+    .blog {
+        position: relative;
+        width: 22em;
+        height: 30em;
+        box-shadow: 3px 3px 20px rgba(0, 0, 0, 0.5);
+        margin: auto;
+        overflow: hidden;
+        background-attachment: local;
+    }
+
+    .blog * {
+        position: relative;
+        z-index: 2;
+    }
+
+    .blog:hover .color-overlay {
+        background: rgba(74, 100, 114, 0.8);
+    }
+
+    .blog:hover .info {
+        bottom: -3em;
+        opacity: 1;
+    }
+
+    .blog,
+    .color-overlay {
+        border-radius: 0.7em;
+    }
+
+    .color-overlay {
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        position: absolute;
+        transition: 0.7s;
+        background: rgba(74, 100, 114, 0.3);
+        z-index: 1;
+    }
+
+    .title-box {
+        display: inline-block;
+        width: 100%;
+        text-align: center;
+        margin-top: 2em;
+    }
+
+    .title-box hr {
+        margin-top: -0.4em;
+        margin-bottom: 1em;
+        width: 5em;
+        height: 0.25em;
+        box-sizing: content-box;
+        border: none;
+        background: #D0BC57;
+    }
+
+    h3 {
+        display: inline-block;
+        font-weight: 500;
+        letter-spacing: 2px;
+        font-size: 1.4em;
+        text-align: center;
+    }
+
+    .intro {
+        width: 170px;
+        margin: 0 auto;
+        color: #fff;
+        font-family: 'Droid Serif', serif;
+        font-size: 13px;
+        font-style: italic;
+        line-height: 18px;
+    }
+
+    .info {
+        font-family: 'Droid Serif', serif;
+        font-size: 1.2em;
+        color: #ddd;
+        line-height: 1.1em;
+        padding: 0 2em;
+        position: relative;
+        bottom: -4em;
+        opacity: 0;
+        background: transparent;
+        transition: opacity 0.3s, bottom 0.3s;
+        text-align: center;
+    }
+
+    .icon-holder i {
+
+        color: #D0BC57;
+    }
+
+    .icon-holder span,
+    h3 {
+        color: #aCcff0;
+    }
+
+    space {
+        display: inline-block;
+        width: 0.6em;
+        height: 1em;
+    }
+</style>
+{% endblock %}

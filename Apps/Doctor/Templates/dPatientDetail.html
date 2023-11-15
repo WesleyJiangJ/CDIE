@@ -1,0 +1,435 @@
+{% extends 'dLayout.html' %}
+{% block span %}
+<span>Detalles</span>
+{% endblock span %}
+
+{% block content %}
+{% include 'message.html' %}
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card mb-4">
+            <div class="card-body text-center">
+                <img {% if object.Sex == '1' %}
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYk_2vcP9_OikAckOmHQTjqxnF0rbNtacNMA&usqp=CAU"
+                    {% else %}
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSxVfIrA9xaq2a3tX0AZAVJvIxGd8kvgx1k4mzTx2UNj-4h_8YQTirERiN1PoPKfY8nF4&usqp=CAU"
+                    {% endif %} alt="avatar" class="rounded-circle img-fluid" style="height:150px; width: 150px;">
+                <h5 class="my-3">
+                    {{ object.FirstName }} {{ object.FirstSurname }}
+                    {% if object.Status == True %}
+                    <i class='bx bxs-circle' style="color: green; vertical-align:top;"></i>
+                    {% else %}
+                    <i class='bx bxs-circle' style="color: red; vertical-align:top;"></i>
+                    {% endif %}
+                </h5>
+                <p class="text-muted mb-4">{{ object.Email }}</p>
+                {% if user.is_authenticated and user.usuario_administrador or user.idDoctor_id or user.idPersonal_id%}
+                    <div class="d-flex justify-content-center mb-2">
+                        <a href="https://wa.me/505{{ object.Phone }}" type="button" class="btn btn-outline-primary ms-1 rounded"
+                            target="_blank">Enviar Mensaje
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+            {% if user.is_authenticated and user.usuario_administrador  or user.idDoctor_id or user.idPersonal_id%}
+                <a class="btn btn-primary rounded-bottom" href="{% url 'PatientUpdate' object.id %}">
+                    <i class='bx bx-edit-alt bx-sm align-middle'>
+                    </i>
+                </a>
+            {% endif %}
+        </div>
+
+        <!-- Budget -->
+        <div class="card mb-4">
+            <div class="card-body text-center">
+                <div class="d-flex align-items-center">
+                    <h5 class="card-title m-0" >Presupuesto</h5>
+                    {% if user.is_authenticated and user.usuario_administrador or user.idDoctor_id or user.idPersonal_id %}
+                        <a class="ms-auto" type="submit" name="budget" href="{% url 'DoctorBudget' object.id %}">
+                            <i class='bx bx-plus d-flex bx-sm'></i>
+                        </a>
+                    {% endif %}    
+                </div>
+                <div class="card-body overflow-auto" style="max-height: 400px;">
+                    <table class="table">
+                        <tbody>
+                            {% if CheckBudget == '1' %}
+                                {% for budget in Budget %}
+                                {% if budget.State == '1' %}
+                                    <tr>
+                                        <td><a href="{% url 'BudgetFieldsDetailView' budget.id %}">Presupuesto {{ budget.id }}</a></td>
+                                    </tr>
+                                {% endif %}
+                                {% endfor %}
+                            {% else %}
+                            <legend class="text-center mt-4">
+                                <i class='bx bx-message-square-x bx-sm align-middle'></i>
+                            </legend>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% if user.is_authenticated and user.usuario_administrador or user.idDoctor_id or user.idPersonal_id %}
+                <a class="btn btn-primary rounded-bottom" href="{% url 'BudgetHistory' object.id %}">
+                    <i class='bx bx-history bx-sm align-middle'></i>
+                </a>
+            {% endif %}
+        </div>
+
+        <!-- Documents -->
+        {% if user.is_authenticated and user.usuario_administrador or user.idDoctor_id or user.idPersonal_id%}
+        <div class="card mb-4">
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="d-flex align-middle">
+                        <h5 class="card-title m-0" >Documentos</h5>
+                    </div>
+                </form>
+                <div class="card-body overflow-auto" style="max-height: 400px;">
+                    <table class="table">
+                        {% if UploadFile %}
+                            {% for file in UploadFile %}
+                                {% if file.idPatient_id == object.id %}
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <a type="submit" href="{% url 'DisplayPdfView' file.id object.id %}" target="_blank">
+                                                {{ file.File }}
+                                            </a>
+                                        </td>
+                                        <td class="text-right">
+                                            <form method="POST" action="{% url 'FileDeleteView' file.id %}">
+                                                {% csrf_token %}
+                                                <button class="border-0 shadow-none bg-white">
+                                                    <i class='bx bx-trash bx-sm'></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                        <legend class="text-center mt-4">
+                            <i class='bx bx-message-square-x bx-sm align-middle'></i>
+                        </legend>
+                        {% endif %}
+                    </table>
+                </div>
+            </div>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="input-group">
+                    {{ form.File }}
+                    <button class="btn btn-primary" style="border-bottom-right-radius: 5px;">
+                        <i class='bx bx-send bx-sm align-middle'></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+        {% endif %}
+
+        <!-- Odontogram -->
+        {% if user.is_authenticated and user.usuario_administrador or user.idDoctor_id or user.idPersonal_id%}
+        <div class="card mb-4">
+            <div class="card-body text-center">
+                <div class="d-flex align-items-center">
+                    <h5 class="card-title m-0">Odontograma</h5>
+                    <div class="ms-auto">
+                        <a class="d-flex align-items-center" type="submit" name="odontogram" href="{% url 'NewOdontogram' object.id %}">
+                            <i class='bx bx-plus bx-sm'></i>
+                        </a>
+                    </div>
+                </div>
+                <ul class="list-group list-group-flush rounded-3">
+                    <li class="list-group-item text-center justify-content-between align-items-center">
+                        <div class="card-body overflow-auto" style="max-height: 400px;">
+                            <table class="table">
+                                    {% if CheckOdontogram == '1' %}
+                                        {% for odontogram in Odontogram %}
+                                            {% if odontogram.state == '1' %}
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <a href="{% url 'OdontogramView' odontogram.id %}">
+                                                                Odontograma {{ odontogram.id }}
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                    <legend class="text-center mt-4">
+                                        <i class='bx bx-message-square-x bx-sm align-middle'></i>
+                                    </legend>
+                                    {% endif %}
+                            </table>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <a class="btn btn-primary rounded-bottom" href="{% url 'OdontogramHistory' object.id %}">
+                <i class='bx bx-history bx-sm align-middle'></i>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+    <!-- Information -->
+    <div class="col-lg-8">
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <p class="mb-0">Nombre Completo</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">
+                            {{ object.FirstName }} {{ object.SecondName }}
+                            {{ object.FirstSurname}} {{ object.SecondSurname }}</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <p class="mb-0">Género</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">{% if object.Sex == '0' %} Femenino {% else %} Masculino {% endif %}
+                        </p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <p class="mb-0">Celular</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">+505 {{ object.Phone }}</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <p class="mb-0">Ocupación</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{ object.Occupation }}</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <p class="mb-0">Fecha de Nacimiento</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{ object.Birthdate }}</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <p class="mb-0">Procedencia</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">
+                            {% if object.Origin == '0' %}
+                            Atlántico Norte
+                            {% elif object.Origin == '1' %}
+                            Atlántico Sur
+                            {% elif object.Origin == '2' %}
+                            Boaco
+                            {% elif object.Origin == '3' %}
+                            Carazo
+                            {% elif object.Origin == '4' %}
+                            Chinandega
+                            {% elif object.Origin == '5' %}
+                            Chontales
+                            {% elif object.Origin == '6' %}
+                            Esteli
+                            {% elif object.Origin == '7' %}
+                            Granada
+                            {% elif object.Origin == '8' %}
+                            Jinotega
+                            {% elif object.Origin == '9' %}
+                            León
+                            {% elif object.Origin == '10' %}
+                            Madriz
+                            {% elif object.Origin == '11' %}
+                            Managua
+                            {% elif object.Origin == '12' %}
+                            Masaya
+                            {% elif object.Origin == '13' %}
+                            Matagalpa
+                            {% elif object.Origin == '14' %}
+                            Nueva Segovia
+                            {% elif object.Origin == '15' %}
+                            Río San Juan
+                            {% elif object.Origin == '16' %}
+                            Rivas
+                            {% elif object.Origin == '17' %}
+                            Extranjero
+                            {% endif %}</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <p class="mb-0">Contacto de Emergencia</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{ object.EmergencyCase }}</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <p class="mb-0">Número de Emergencia</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">+505 {{ object.EmergencyNumber }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appointments -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <table class="table">
+                    <div class="card mb-4 mb-md-0">
+                        <div class="card-body overflow-auto" style="max-height: 400px;">
+                            <h5 class="card-title">Citas</h5>
+                            {% if CheckAppointment == '1' %}
+                                {% for cita in Appointment %}
+                                    {% if cita.Status == '1' %}
+                                    <div class="card text-white bg-primary mb-3">
+                                        <!--<div class="card-header">{{ cita.Description }}</div> -->
+                                        <div class="card-body">
+                                            <h4 class="card-title">{{ cita.Description }}</h4>
+                                            <p class="card-text">{{ cita.Date }}</p>
+                                            {% for doctor in Doctor %}
+                                                {% if cita.idDoctor_id == doctor.id %}
+                                                    <p class="card-text">{{ doctor.FirstName }} {{ doctor.FirstSurname }}</p>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                            <legend class="text-center my-4">
+                                <i class='bx bx-message-square-x bx-sm align-middle'></i>
+                            </legend>
+                            {% endif %}
+                        </div>
+                        <a class="btn btn-primary rounded-bottom" href="{% url 'AppointmentHistory' object.id %}">
+                            <i class='bx bx-history bx-sm align-items-center'></i>
+                        </a>
+                    </div>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <table>
+                    <div class="card mb-4 mb-md-0">
+                        <div class="card-body overflow-auto" style="max-height: 400px;">
+                            <h5 class="card-title">Pagos</h5>
+                            {% if CheckPaymentControl == '1' %}
+                                {% for paymentcontrol in PaymentControl %}
+                                {% if paymentcontrol.Done != True %}
+                                    {% for budget in Budget %}
+                                        {% if paymentcontrol.idMainBudget_id == budget.id %}
+                                        <div class="card text-white bg-primary mb-3">
+                                            <div class="card-body">
+                                                <h4 class="card-title">Control de Pago {{ paymentcontrol.id }}</h4>
+                                                <p class="card-text">{{ paymentcontrol.Date }}</p>
+                                                <a href="{% url 'DoctorPaymentBalance' budget.id %}" class="btn btn-primary form-control">
+                                                    <i class='bx bxs-detail bx-sm align-middle'></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                                {% endfor %}
+                            {% else %}
+                            <legend class="text-center my-4">
+                                <i class='bx bx-message-square-x bx-sm align-middle'></i>
+                            </legend>
+                            {% endif %}
+                        </div>
+                        <a class="btn btn-primary rounded-bottom" href="{% url 'PaymentDoneHistory' object.id %}">
+                            <i class='bx bx-history bx-sm align-items-center'></i>
+                        </a>
+                    </div>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        margin-top: 20px;
+        color: #1a202c;
+        text-align: left;
+        background-color: #e2e8f0;
+    }
+
+    .main-body {
+        padding: 15px;
+    }
+
+    .card {
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .1), 0 1px 2px 0 rgba(0, 0, 0, .06);
+    }
+
+    .card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 0 solid rgba(0, 0, 0, .125);
+        border-radius: .25rem;
+    }
+
+    .card-body {
+        flex: 1 1 auto;
+        min-height: 1px;
+        padding: 1rem;
+    }
+
+    .gutters-sm {
+        margin-right: -8px;
+        margin-left: -8px;
+    }
+
+    .gutters-sm>.col,
+    .gutters-sm>[class*=col-] {
+        padding-right: 8px;
+        padding-left: 8px;
+    }
+
+    .mb-3,
+    .my-3 {
+        margin-bottom: 1rem !important;
+    }
+
+    .bg-gray-300 {
+        background-color: #e2e8f0;
+    }
+
+    .h-100 {
+        height: 100% !important;
+    }
+
+    .shadow-none {
+        box-shadow: none !important;
+    }
+</style>
+{% endblock %}

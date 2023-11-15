@@ -1,0 +1,128 @@
+{% extends 'dLayout.html' %}
+{% block span %}
+<span>Asistente</span>
+{% endblock span %}
+
+{% block content %}
+{% include 'message.html' %}
+<div>
+    <div class="input-group">
+        <input type="text" class="form-control" id="InputSearch" placeholder="Buscar Asistente" onkeyup="searchBar();">
+        <button class="btn btn-primary" id="btnFilter" onclick="listAssistant();">
+            <i class='bx bx-filter-alt bx-sm align-middle' id="filterIcon"></i>
+        </button>
+
+        <script>
+            let filteredAssistant = [];
+            var input = document.getElementById("InputSearch");
+
+            function listAssistant() {
+                $.ajax({
+                    url: '/doctor/assistantlist/',
+                    type: 'GET',
+                    dataType: 'JSON',
+                    success: function (response) {
+                        filter = filterFunction()
+                        buildTable(response, filter)
+                    },
+                    error: function (response) {
+                        //console.log(response)
+                    },
+                });
+            };
+
+            function buildTable(data, filter) {
+                var table = document.getElementById('assistantTable');
+                filteredAssistant = [];
+                table.innerHTML = ""
+
+                for (let i = 0; i < data.length; i++) {
+                    if (data[i].Status == filter) {
+                        filteredAssistant = [...filteredAssistant, data[i]];
+
+                        var href = "href='{% url 'AssistantDetailView' 12345 %}'"
+                        var url_mask = href.replace("12345", data[i].id)
+                        var row =
+                            `<tr>
+							<!-- <td>${data[i].FirstName} ${data[i].SecondName} ${data[i].FirstSurname} ${data[i].SecondSurname}</td> -->
+                            <td>${data[i].Fullname}</td>
+							<td class="text-center">
+                                <a href="https://wa.me/505${data[i].Phone}" target="_blank">
+                                    <i class='bx bxl-whatsapp bx-sm align-middle'></i>
+                                </a>
+                            </td>
+                            <td>
+                                <a type="button" ${url_mask}>
+                                    <i class='bx bx-detail bx-sm align-middle'></i>
+                                </a>
+                            </td>
+                        </tr>`
+                        table.innerHTML += row
+                    }
+                }
+            };
+
+            function filterFunction() {
+                var filter = document.getElementById('btnFilter').value;
+
+                if (filter == 'true') {
+                    document.getElementById('filterIcon').classList.remove('bx-filter-alt');
+                    document.getElementById('filterIcon').classList.add('bxs-filter-alt');
+                    filter = document.getElementById('btnFilter').value = false;
+                    input.value = ""
+                }
+                else {
+                    document.getElementById('filterIcon').classList.remove('bxs-filter-alt');
+                    document.getElementById('filterIcon').classList.add('bx-filter-alt');
+                    filter = document.getElementById('btnFilter').value = true;
+                    input.value = ""
+                }
+                return filter;
+            };
+
+            function searchBar() {
+                var filter, table, tr, td, i, txtValue;
+                filter = input.value.toUpperCase();
+                table = document.getElementById("myTable");
+                tr = table.getElementsByTagName("tr");
+
+                for (i = 0; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[0];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+
+            $(document).ready(function () {
+                listAssistant();
+            });
+        </script>
+
+        <a class="btn btn-success rounded-end" type="button" href="{% url 'RegistrarUsuarioAssistant' %}">
+            <i class='bx bx-plus-medical bx-sm align-middle'>
+            </i>
+        </a>
+    </div>
+
+    <table id="myTable" class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Nombre</th>
+                <th class="text-center" scope="col">WhatsApp</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody id="assistantTable">
+        </tbody>
+    </table>
+    <div id="Message" class="d-none">
+        <legend>No hay coincidencias</legend>
+    </div>
+</div>
+{% endblock %}

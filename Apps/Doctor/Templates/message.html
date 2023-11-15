@@ -1,0 +1,19 @@
+{% if messages %}
+  {% for message in messages %}
+    <div id="message_container" class="alert {{ message.tags }} alert-dismissible">
+        <!-- <button type="button" class="btn-close" data-bs-dismiss="alert"></button> -->
+        <strong>{{message}}</strong>
+    </div>
+    <script>
+        var message_ele = document.getElementById("message_container");
+
+        setTimeout(function(){ 
+        message_ele.style.display = "none"; 
+        }, 5000);
+
+        $("#message_container").fadeTo(2000, 500).slideUp(500, function () {
+                $("#message_container").slideUp(500);
+        });
+    </script>
+ {% endfor %}
+{% endif %}

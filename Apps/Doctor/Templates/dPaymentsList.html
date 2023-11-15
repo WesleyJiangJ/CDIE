@@ -1,0 +1,99 @@
+{% extends 'dLayout.html' %}
+{% block span %}
+<span>Pagos</span>
+{% endblock span %}
+
+{% block content %}
+<div>
+    <div class="input-group">
+        <input type="text" class="form-control" id="InputSearch" placeholder="Buscar Paciente" onkeyup="searchBar();">
+
+        <script>
+            let filteredPatients = [];
+            var input = document.getElementById("InputSearch");
+
+            function listPatients() {
+                $.ajax({
+                    url: '/doctor/payments/',
+                    type: 'GET',
+                    dataType: 'JSON',
+                    success: function (response) {
+                        // filter = filterFunction()
+                        buildTable(response)
+                        //console.log(response)
+                    },
+                    error: function (response) {
+                        //console.log(response)
+                    },
+                });
+            };
+
+            function buildTable(data, filter) {
+                var table = document.getElementById('paymentTable');
+                filteredPatients = [];
+                table.innerHTML = ""
+
+                for (let i = 0; i < data.length; i++) {
+                    if (data[i].paymentDone == false) {
+                        filteredPatients = [...filteredPatients, data[i]];
+
+                        var href = "href='{% url 'DoctorPaymentBalance' 12345 %}'"
+                        var url_mask = href.replace("12345", data[i].BudgetFK)
+                        var row =
+                            `
+                            <tr>
+                            <td>${data[i].PatientFullName}</td>
+                            <td>Control de Pagos ${data[i].id}</td>
+                            <td>
+                                <a type="button" ${url_mask}>
+                                    <i class='bx bx-detail bx-sm align-middle'></i>
+                                </a>
+                            </td>
+                            </tr>
+                            `
+                        table.innerHTML += row
+                    }
+                }
+            };
+
+            function searchBar() {
+                var filter, table, tr, td, i, txtValue;
+                filter = input.value.toUpperCase();
+                table = document.getElementById("myTable");
+                tr = table.getElementsByTagName("tr");
+
+                for (i = 0; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[0];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+
+            $(document).ready(function () {
+                listPatients();
+            });
+        </script>
+    </div>
+
+    <table id="myTable" class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col">Contenido</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody id="paymentTable">
+        </tbody>
+    </table>
+    <div id="Message" class="d-none">
+        <legend>No hay coincidencias</legend>
+    </div>
+</div>
+{% endblock %}

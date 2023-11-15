@@ -1,0 +1,441 @@
+{% extends 'dLayout.html' %}
+{% block span %}
+<span>{% if object %} Modificar Paciente {% else %} Nuevo Paciente {% endif %}</span>
+{% endblock span %}
+
+{% block content %}
+<form method="POST">
+    {% csrf_token %}
+    <fieldset>
+        <legend>Historia Clínica</legend>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm">
+                    <div class="form-group">
+                        <label for="{{ form.FirstName.name }}" class="form-label mt-4">Primer Nombre</label>
+                        {{ form.FirstName }}
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="form-group">
+                        <label for="{{ form.SecondName.name }}" class="form-label mt-4">Segundo Nombre</label>
+                        {{ form.SecondName }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm">
+                    <div class="form-group">
+                        <label for="{{ form.FirstSurname.name }}" class="form-label mt-4">Primer Apellido</label>
+                        {{ form.FirstSurname }}
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="form-group">
+                        <label for="{{ form.SecondSurname.name }}" class="form-label mt-4">Segundo Apellido</label>
+                        {{ form.SecondSurname }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.Birthdate.name }}" class="form-label mt-4">Fecha de Nacimiento</label>
+            {{ form.Birthdate }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.Sex.name }}" class="form-label mt-4">Sexo</label>
+            {{ form.Sex }}
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm">
+                    <div class="form-group">
+                        <label for="{{ form.Address.name }}" class="form-label mt-4">Dirección</label>
+                        {{ form.Address }}
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="form-group">
+                        <label for="{{ form.Origin.name }}" class="form-label mt-4">Procedencia</label>
+                        {{ form.Origin }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm">
+                    <div class="form-group">
+                        <label for="{{ form.Phone.name }}" class="form-label mt-4">Celular</label>
+                        {{ form.Phone }}
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="form-group">
+                        <label for="{{ form.Email.name }}" class="form-label mt-4">Correo</label>
+                        {{ form.Email }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm">
+                    <div class="form-group">
+                        <label for="{{ form.Occupation.name }}" class="form-label mt-4">Ocupación</label>
+                        {{ form.Occupation }}
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="form-group">
+                        <label for="{{ form.MaritalStatus.name }}" class="form-label mt-4">Estado Civil</label>
+                        {{ form.MaritalStatus }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm">
+                    <div class="form-group">
+                        <label for="{{ form.EmergencyCase.name }}" class="form-label mt-4">En caso de emergencia</label>
+                        {{ form.EmergencyCase }}
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="form-group">
+                        <label for="{{ form.EmergencyPhone.name }}" class="form-label mt-4">Celular</label>
+                        {{ form.EmergencyNumber }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <legend>Antecedentes Personales</legend>
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <label for="{{ form2.Alergia.name }}" class="form-label mt-4">Alergias</label>
+                    {{ form2.Alergias }}
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="{{ form2.Patologicos.name }}" class="form-label mt-4">Patológicos</label>
+                    {{ form2.Patologicos }}
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="form-group">
+                    <label for="{{ form2.Farmacologicos.name }}" class="form-label mt-4">Farmacológicos</label>
+                    {{ form2.Farmacologicos }}
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="form-group">
+                    <label for="{{ form2.Hospitalizaciones.name }}" class="form-label mt-4">Hospitalizaciones</label>
+                    {{ form2.Hospitalizaciones }}
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="form-group">
+                    <label for="{{ form2.Quirurgico.name }}" class="form-label mt-4">Quirúrgico</label>
+                    {{ form2.Quirurgico }}
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="form-group">
+                    <label for="{{ form2.Transfusiones.name }}" class="form-label mt-4">Transfusiones</label>
+                    {{ form2.Transfusiones }}
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="form-group">
+                    <label for="{{ form2.Radioterapia.name }}" class="form-label mt-4">Radioterapia</label>
+                    {{ form2.Radioterapia }}
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="form-group">
+                    <label for="{{ form2.Quimioterapia.name }}" class="form-label mt-4">Quimioterapia</label>
+                    {{ form2.Quimioterapia }}
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="form-group">
+                    <label for="{{ form2.Habitos.name }}" class="form-label mt-4">Hábitos</label>
+                    {{ form2.Habitos }}
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="form-group">
+                    <label for="{{ form2.COVID.name }}" class="form-label mt-4">COVID</label>
+                    {{ form2.COVID }}
+                </div>
+            </div>
+
+            <div class="row" id="doseId" style="display: none;">
+                <div class="col-sm">
+                    <div class="form-group">
+                        <label for="{{ form2.CantidadDosis.name }}" class="form-label mt-4">¿Cuántas Dosis?</label>
+                        {{ form2.CantidadDosis }}
+                    </div>
+                </div>
+
+                <div class="col-sm">
+                    <div class="form-group">
+                        <label for="{{ form2.UltimaDosis.name }}" class="form-label mt-4">¿Cuándo fue la Última
+                            Dosis?</label>
+                        {{ form2.UltimaDosis }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form2.Observaciones.name }}" class="form-label mt-4">Observaciones</label>
+                {{ form2.Observaciones }}
+            </div>
+
+            <hr class="mt-4">
+
+            <div class="row">
+                <legend>Bucales</legend>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="{{ form2.VisitaFrecuente.name }}" class="form-label mt-4">¿Visita Frecuentemente al
+                            Odontólogo?</label>
+                        {{ form2.VisitaFrecuente }}
+                    </div>
+                </div>
+
+                <div class="col" id="ExperienceDIV" style="display: none;">
+                    <div class="form-group">
+                        <label form="{{ form2.Experiencia.name }}" class="form-label mt-4">Experiencia</label>
+                        {{ form2.Experiencia }}
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="form-group">
+                        <label for="{{ form2.HiloDental.name }}" class="form-label mt-4">¿Utiliza Hilo Dental?</label>
+                        {{ form2.HiloDental }}
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="form-group">
+                        <label for="{{ form2.Enjuague.name }}" class="form-label mt-4">¿Utiliza Enjuague Bucal?</label>
+                        {{ form2.Enjuague }}
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="form-group">
+                        <label for="{{ form2.TipoCepillo.name}}" class="form-label mt-4">Tipo de Cepillo</label>
+                        {{ form2.TipoCepillo }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group" id="LastVisitDiv" style="display: none;">
+                <label for="{{ form2.FechaUltimaVisita.name }}" class="form-label mt-4">Fecha de la Última
+                    Visita</label>
+                {{ form2.FechaUltimaVisita }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form2.FrecuenciaDeCepillado.name }}" class="form-label mt-4">Frecuencia del
+                    Cepillado</label>
+                {{ form2.FrecuenciaDeCepillado }}
+            </div>
+
+            <div class="form-group" id="HiloFrecuenciaDIV" style="display: none;">
+                <label for="{{ form2.FrecuenciaDeHilo.name}}" class="form-label mt-4">Frecuencia del Uso de Hilo
+                    Dental</label>
+                {{ form2.FrecuenciaDeHilo }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form2.Otros.name }}" class="form-label mt-4">Otros</label>
+                {{ form2.Otros }}
+            </div>
+
+            <div class="form-group">
+                <legend class="mt-4">Tratamientos Recibidos</legend>
+                <div class="form-check">
+                    {{ form2.Periodoncia }}
+                    <label class="form-check-label" for="{{ form2.Periodoncia.name }}">Periodoncia</label>
+                </div>
+
+                <div class="form-check">
+                    {{ form2.Endodoncia }}
+                    <label class="form-check-label" for="{{ form2.Endodoncia.name }}">Endodoncia</label>
+                </div>
+
+                <div class="form-check">
+                    {{ form2.Exodoncia }}
+                    <label class="form-check-label" for="{{ form2.Exodoncia.name }}">Exodoncia</label>
+                </div>
+
+                <div class="form-check">
+                    {{ form2.ImplanteDental }}
+                    <label class="form-check-label" for="{{ form2.ImplanteDental.name }}">Implante Dental</label>
+                </div>
+
+                <div class="form-check">
+                    {{ form2.Protesis }}
+                    <label class="form-check-label" for="{{ form2.Protesis.name }}">Prótesis</label>
+                </div>
+
+                <div class="form-check">
+                    {{ form2.OperatoriaDental }}
+                    <label class="form-check-label" for="{{ form2.OperatoriaDental.name }}">Operatoria Dental</label>
+                </div>
+
+                <div class="form-check">
+                    {{ form2.CirugiaOral }}
+                    <label class="form-check-label" for="{{ form2.CirugiaOral.name }}">Cirugía Oral</label>
+                </div>
+
+                <div class="form-check">
+                    {{ form2.Ortodoncia }}
+                    <label class="form-check-label" for="{{ form2.Ortodoncia.name }}">Ortodoncia</label>
+                </div>
+
+                <div class="form-check">
+                    {{ form2.Diagnostico }}
+                    <label class="form-check-label" for="{{ form2.Diagnostico.name }}">Diagnostico</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="form-group mb-4 mt-4">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-lg btn-primary rounded" type="submit">
+                            {% if object %}
+                            Actualizar
+                            {% else %}
+                            Guardar
+                            {% endif %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% if object %}
+            <form method="post">
+                <div class="col">
+                    <div class="form-group mb-4 mt-4">
+                        <div class="d-grid gap-2">
+                            <button
+                                class="btn btn-lg rounded {% if  object.Status == True %} btn-danger {% else %} btn-success {% endif %}"
+                                name="Status">
+                                {% if object.Status == True %} Dar de Baja {%else %} Dar de Alta {% endif %}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            {% endif %}
+        </div>
+    </fieldset>
+</form>
+
+<script>
+    function showContent() {
+        element = document.getElementById("doseId");
+        covidY = document.getElementById("id_COVID_0");
+        covidN = document.getElementById("id_COVID_1");
+        if (covidY.checked) {
+            element.style.display = 'block';
+        }
+        else {
+            element.style.display = 'none';
+        }
+
+        if (covidN.checked) {
+            element.style.display = 'none';
+        }
+    }
+
+    window.addEventListener("load", function () {
+        covidY = document.getElementById("id_COVID_0");
+        VisitYRadio = document.getElementById("id_VisitaFrecuente_0");
+        ExperienceRadio_0 = document.getElementById("id_Experiencia_0");
+        ExperienceRadio_1 = document.getElementById("id_Experiencia_1");
+        ExperienceRadio_2 = document.getElementById("id_Experiencia_2");
+        HiloY = document.getElementById("id_HiloDental_0")
+
+        element = document.getElementById("doseId");
+        element2 = document.getElementById("LastVisitDiv");
+        element3 = document.getElementById("ExperienceDIV");
+        element4 = document.getElementById("HiloFrecuenciaDIV");
+
+        if (covidY.checked) {
+            element.style.display = 'block';
+        }
+        if (VisitYRadio.checked && ExperienceRadio_0.checked || ExperienceRadio_1.checked || ExperienceRadio_2.checked) {
+            element2.style.display = 'block';
+            element3.style.display = 'block';
+        }
+        if (HiloY.checked) {
+            element4.style.display = 'block'
+        }
+    }, false);
+
+    function showContentFrecuency() {
+        LastVisitDiv = document.getElementById("LastVisitDiv");
+        ExperienceDIV = document.getElementById("ExperienceDIV");
+        VisitYRadio = document.getElementById("id_VisitaFrecuente_0");
+        VisitNRadio = document.getElementById("id_VisitaFrecuente_1");
+
+        if (VisitYRadio.checked) {
+            LastVisitDiv.style.display = 'block';
+            ExperienceDIV.style.display = 'block';
+        }
+        else {
+            LastVisitDiv.style.display = 'none';
+            ExperienceDIV.style.display = 'none';
+        }
+
+        if (VisitNRadio.checked) {
+            LastVisitDiv.style.display = 'none';
+            ExperienceDIV.style.display = 'none';
+        }
+    }
+
+    function showFlossFrecuency() {
+        element = document.getElementById("HiloFrecuenciaDIV");
+        FlossY = document.getElementById("id_HiloDental_0");
+        FlossN = document.getElementById("id_HiloDental_1");
+
+        if (FlossY.checked) {
+            element.style.display = 'block';
+        }
+        else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+{% endblock content %}

@@ -1,0 +1,72 @@
+{% extends 'dLayout.html' %}
+{% block span %}
+<span>{% if object %} Modificar {% else %} Agendar {% endif %}</span>
+{% endblock span %}
+
+{% block content %}
+<form method="POST">
+    {% csrf_token %}
+    <fieldset>
+        <legend>{% if object %} Modificar {% else %} Agendar {% endif %} Cita</legend>
+        <div class="form-group">
+            <label for="InputPatient" class="form-label mt-4">Paciente</label>
+            {% if not object %}
+                <select name="InputPatient" class="form-control" id="InputPatient" placeholder="Seleccione un paciente" required>
+                    <option value="">Seleccione un paciente</option>
+                    {% for patient in Patient %}
+                    <option value="{{ patient.id }}">{{ patient.FirstName }} {{ patient.SecondName }} {{ patient.FirstSurname }} {{ patient.SecondSurname }}</option>
+                    {% endfor %}
+                </select>
+
+            {% else %}
+                <input class="form-control" type="text" value="{{ Patient.FirstName }} {{ Patient.SecondName }} {{ Patient.FirstSurname }} {{ Patient.SecondSurname }}" readonly>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="InputDoctor" class="form-label mt-4">Médico</label>
+            {% if not object %}
+                <select name="InputDoctor" class="form-control" id="InputDoctor" placeholder="Seleccione un médico" required>
+                    <option value="">Seleccione un médico</option>
+                    {% for medico in Doctor %}
+                    <option value="{{ medico.id }}">{{ medico.FirstName }} {{ medico.SecondName }} {{ medico.FirstSurname }} {{ medico.SecondSurname }}</option>
+                    {% endfor %}
+                </select>
+
+                {% else %}
+                <input class="form-control" type="text" value="{{ Doctor.FirstName }} {{ Doctor.SecondName }} {{ Doctor.FirstSurname }} {{ Doctor.SecondSurname }}" readonly>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.Description.name }}" class="form-label mt-4">Descripción</label>
+            {{ form.Description }}
+            <label for="{{ form.Date.name }}" class="form-label mt-4">Fecha</label>
+            {{ form.Date }}
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="form-group mb-4 mt-4">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-lg btn-primary rounded" type="submit">
+                            {% if object %} Actualizar {% else %} Guardar {% endif %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% if object %}
+            <form method="post">
+                <div class="col">
+                    <div class="form-group mb-4 mt-4">
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-lg btn-danger rounded" name="Status">Cancelar Cita</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            {% endif %}
+        </div>
+    </fieldset>
+</form>
+{% endblock content %}
